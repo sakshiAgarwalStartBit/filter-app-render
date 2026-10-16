@@ -1,10 +1,10 @@
 // All requests go through the app's Shopify App Proxy (registered as
-// "/apps/collection-filters" in shopify.app.toml), which Shopify serves
+// "/apps/product-filters" in shopify.app.toml), which Shopify serves
 // from the storefront's own domain and forwards to the app's backend with
 // a signed request the server verifies (see proxy.*.jsx routes). This
 // means requests are always same-origin to the storefront — no app URL,
 // CORS, or hardcoded tunnel/production domain is ever needed here.
-const PROXY_PATH = "/apps/collection-filters";
+const PROXY_PATH = "/apps/product-filters";
 
 // Must match the @container max-width in collection-filters.css — at or
 // below this host width the filters collapse into the off-canvas drawer.
