@@ -36,6 +36,7 @@ export default function App() {
     <AppProvider embedded apiKey={apiKey}>
       {!isPopup && (
         <s-app-nav>
+          <s-link href="/app" rel="home">Home</s-link>
           {hasAccess && <s-link href="/app/filters">Filters</s-link>}
           {hasAccess && <s-link href="/app/reviews">Reviews</s-link>}
           {hasAccess && <s-link href="/app/wishlists">Wishlists</s-link>}

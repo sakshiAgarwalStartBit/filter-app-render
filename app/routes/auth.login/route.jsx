@@ -1,5 +1,18 @@
 import { AppProvider } from "@shopify/shopify-app-react-router/react";
-import { redirect } from "react-router";
+import { useState } from "react";
+import { Form, redirect, useActionData } from "react-router";
+import { LoginErrorType } from "@shopify/shopify-app-react-router/server";
+import { login } from "../../shopify.server";
+
+function loginErrorMessage(loginErrors) {
+  if (loginErrors?.shop === LoginErrorType.MissingShop) {
+    return { shop: "Please enter your shop domain to log in" };
+  }
+  if (loginErrors?.shop === LoginErrorType.InvalidShop) {
+    return { shop: "Please enter a valid shop domain to log in" };
+  }
+  return {};
+}
 
 // Merchants install and open this app from Shopify (the App Store or their
 // Shopify admin), so it never asks for a shop domain. A request that already
@@ -15,16 +28,35 @@ export const loader = async ({ request }) => {
   return null;
 };
 
+// The landing page's "Install app" form posts a shop domain here; login()
+// validates it and redirects into OAuth, or returns an error to display.
+export const action = async ({ request }) => {
+  const errors = loginErrorMessage(await login(request));
+  return { errors };
+};
+
 export default function Auth() {
+  const actionData = useActionData();
+  const [shop, setShop] = useState("");
+  const error = actionData?.errors?.shop;
+
   return (
     <AppProvider embedded={false}>
       <s-page>
-        <s-section heading="SB Product Filter">
-          <s-paragraph>
-            Open this app from your Shopify admin: go to Apps, then SB Product
-            Filter. To install it, find it in the Shopify App Store.
-          </s-paragraph>
-        </s-section>
+        <Form method="post">
+          <s-section heading="Install SB Product Filter">
+            <s-text-field
+              name="shop"
+              label="Shop domain"
+              details="example.myshopify.com"
+              value={shop}
+              onChange={(e) => setShop(e.currentTarget.value)}
+              autocomplete="on"
+              error={error}
+            ></s-text-field>
+            <s-button type="submit">Install app</s-button>
+          </s-section>
+        </Form>
       </s-page>
     </AppProvider>
   );

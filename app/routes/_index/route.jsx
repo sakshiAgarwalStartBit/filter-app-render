@@ -1,4 +1,4 @@
-import { redirect } from "react-router";
+import { Form, redirect } from "react-router";
 import styles from "./styles.module.css";
 
 export const loader = async ({ request }) => {
@@ -21,6 +21,20 @@ export default function App() {
           price, availability, vendor, tags, product type, category, variant
           options, reviews, and product metafields.
         </p>
+        <Form className={styles.form} method="post" action="/auth/login">
+          <label className={styles.label}>
+            <span>Shop domain</span>
+            <input
+              className={styles.input}
+              type="text"
+              name="shop"
+              placeholder="my-shop-domain.myshopify.com"
+            />
+          </label>
+          <button className={styles.button} type="submit">
+            Install app
+          </button>
+        </Form>
         <ul className={styles.list}>
           <li>
             <strong>Powerful filtering</strong>. Price, availability, vendor,
