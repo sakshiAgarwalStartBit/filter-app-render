@@ -738,7 +738,7 @@ body > .collection-filters-app__drawer-overlay:not([hidden]) {
 
 .collection-filters-app__grid {
   display: grid;
-  grid-template-columns: repeat(var(--collection-filters-grid-columns, 4), 1fr);
+  grid-template-columns: repeat(var(--collection-filters-grid-columns, 4), minmax(0, 1fr));
   gap: 16px;
   align-items: stretch;
 }
@@ -859,11 +859,17 @@ body > .collection-filters-app__drawer-overlay:not([hidden]) {
 
 .collection-filters-app__product-image-wrapper {
   position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--collection-filters-image-radius, 4px);
 }
 
 .collection-filters-app__product-image {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  height: 100%;
   object-fit: cover;
   display: block;
   border-radius: var(--collection-filters-image-radius, 4px);
