@@ -2,38 +2,38 @@
 
 client_id = "092889a9077c9654987f039b57f18cee"
 name = "SB Product Filter Render"
-application_url = "https://REPLACE-WITH-RENDER-URL.onrender.com"
+application_url = "https://filter-app-render.onrender.com"
 embedded = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_products,read_themes"
+scopes = "read_themes,write_metaobject_definitions,write_metaobjects,write_products"
 
 [webhooks]
 api_version = "2025-07"
 
   [[webhooks.subscriptions]]
-  uri = "https://REPLACE-WITH-RENDER-URL.onrender.com/webhooks/app/uninstalled"
+  uri = "https://filter-app-render.onrender.com/webhooks/app/uninstalled"
   topics = [ "app/uninstalled" ]
 
   [[webhooks.subscriptions]]
-  uri = "https://REPLACE-WITH-RENDER-URL.onrender.com/webhooks/app/scopes_update"
+  uri = "https://filter-app-render.onrender.com/webhooks/app/scopes_update"
   topics = [ "app/scopes_update" ]
 
   [[webhooks.subscriptions]]
-  uri = "https://REPLACE-WITH-RENDER-URL.onrender.com/webhooks/billing"
+  uri = "https://filter-app-render.onrender.com/webhooks/billing"
   topics = [ "app_subscriptions/update", "shop/update" ]
 
   [[webhooks.subscriptions]]
-  uri = "https://REPLACE-WITH-RENDER-URL.onrender.com/webhooks/customers/data_request"
+  uri = "https://filter-app-render.onrender.com/webhooks/customers/data_request"
   compliance_topics = [ "customers/data_request" ]
 
   [[webhooks.subscriptions]]
-  uri = "https://REPLACE-WITH-RENDER-URL.onrender.com/webhooks/customers/redact"
+  uri = "https://filter-app-render.onrender.com/webhooks/customers/redact"
   compliance_topics = [ "customers/redact" ]
 
   [[webhooks.subscriptions]]
-  uri = "https://REPLACE-WITH-RENDER-URL.onrender.com/webhooks/shop/redact"
+  uri = "https://filter-app-render.onrender.com/webhooks/shop/redact"
   compliance_topics = [ "shop/redact" ]
 
 [events]
@@ -44,13 +44,13 @@ api_version = "unstable"
   topic = "Product"
   actions = ["update"]
   triggers = ["product.*"]
-  uri = "https://REPLACE-WITH-RENDER-URL.onrender.com/webhooks/app/product_update"
+  uri = "https://filter-app-render.onrender.com/webhooks/app/product_update"
 
 [auth]
-redirect_urls = [ "https://REPLACE-WITH-RENDER-URL.onrender.com/auth/callback" ]
+redirect_urls = [ "https://filter-app-render.onrender.com/auth/callback" ]
 
 [app_proxy]
-url = "https://REPLACE-WITH-RENDER-URL.onrender.com/proxy"
+url = "https://filter-app-render.onrender.com/proxy"
 subpath = "collection-filters"
 prefix = "apps"
 

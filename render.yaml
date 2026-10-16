@@ -8,11 +8,11 @@ services:
     healthCheckPath: /healthz
     envVars:
       - key: NODE_VERSION
-        value: 20.19.0
+        value: 22.18.0
       - key: NODE_ENV
         value: production
       - key: SCOPES
-        value: read_products,read_themes
+        value: read_themes,write_metaobject_definitions,write_metaobjects,write_products
       - key: SHOPIFY_API_KEY
         sync: false
       - key: SHOPIFY_API_SECRET
