@@ -1,0 +1,16 @@
+{
+  "collection": {
+    "filters": {
+      "title": "Filters",
+      "from": "From",
+      "to": "To",
+      "clear_all": "Clear all",
+      "apply": "Apply",
+      "no_results": "No products found",
+      "loading": "Loading filters…",
+      "previous": "Previous",
+      "next": "Next",
+      "wishlist_empty": "Your wishlist is empty."
+    }
+  }
+}

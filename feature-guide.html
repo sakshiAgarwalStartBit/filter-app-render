@@ -1,0 +1,723 @@
+<title>Collection Filter Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #fafaf7;
+    --paper-raised: #ffffff;
+    --sage: #3d5a47;
+    --sage-soft: #eef2ee;
+    --neutral: #8a8378;
+    --hairline: #e8e4dc;
+    --rust: #c4602f;
+    --rust-soft: #fbeee6;
+    --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #ece8e0;
+      --paper: #16181a;
+      --paper-raised: #1e2124;
+      --sage: #8fb59d;
+      --sage-soft: #202a24;
+      --neutral: #9a9488;
+      --hairline: #2c2f32;
+      --rust: #e08a5c;
+      --rust-soft: #2c211b;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ink: #ece8e0;
+    --paper: #16181a;
+    --paper-raised: #1e2124;
+    --sage: #8fb59d;
+    --sage-soft: #202a24;
+    --neutral: #9a9488;
+    --hairline: #2c2f32;
+    --rust: #e08a5c;
+    --rust-soft: #2c211b;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .shell {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 0;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  nav.toc {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    padding: 64px 24px 64px 40px;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .toc-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--neutral);
+    margin: 0 0 18px;
+  }
+
+  .toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .toc-list a {
+    display: block;
+    padding: 7px 10px;
+    margin-left: -10px;
+    border-radius: 6px;
+    color: var(--neutral);
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+
+  .toc-list a:hover {
+    background: var(--sage-soft);
+    color: var(--sage);
+  }
+
+  main {
+    padding: 64px 56px 120px 48px;
+    border-left: 1px solid var(--hairline);
+    min-width: 0;
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin: 0 0 14px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-size: clamp(2.1rem, 3.4vw, 2.9rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+
+  .lede {
+    font-size: 1.05rem;
+    color: var(--neutral);
+    max-width: 62ch;
+    margin: 0 0 8px;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 28px 0 56px;
+    padding: 16px 20px;
+    background: var(--paper-raised);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    font-size: 13px;
+  }
+
+  .meta-item dt {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--neutral);
+    margin: 0 0 4px;
+  }
+
+  .meta-item dd {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  section.area {
+    margin: 0 0 68px;
+    scroll-margin-top: 32px;
+  }
+
+  section.area > h2 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.55rem;
+    letter-spacing: -0.005em;
+    margin: 0 0 6px;
+  }
+
+  .area-sub {
+    color: var(--neutral);
+    font-size: 0.95rem;
+    max-width: 62ch;
+    margin: 0 0 28px;
+  }
+
+  .feature {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 28px;
+    padding: 22px 0;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .feature:last-child {
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .feature-name {
+    font-weight: 600;
+    font-size: 0.98rem;
+    padding-top: 1px;
+  }
+
+  .feature-name .path {
+    display: block;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11.5px;
+    color: var(--sage);
+    margin-top: 6px;
+    letter-spacing: 0.01em;
+  }
+
+  .feature-body p {
+    margin: 0 0 10px;
+    font-size: 0.95rem;
+    max-width: 60ch;
+  }
+
+  .feature-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .feature-body ul {
+    margin: 8px 0 0;
+    padding-left: 20px;
+    font-size: 0.92rem;
+  }
+
+  .feature-body li {
+    margin-bottom: 5px;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.03em;
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: var(--sage-soft);
+    color: var(--sage);
+  }
+
+  .tag.pending {
+    background: var(--rust-soft);
+    color: var(--rust);
+  }
+
+  .pending-note {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: var(--rust-soft);
+    border-radius: 8px;
+    font-size: 0.86rem;
+    color: var(--ink);
+  }
+
+  .pending-note strong {
+    color: var(--rust);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding-top: 1px;
+  }
+
+  .divider-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--neutral);
+    margin: 0 0 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .howto-steps {
+    counter-reset: step;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .howto-steps li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 40px;
+    font-size: 0.95rem;
+  }
+
+  .howto-steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: -1px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--sage-soft);
+    color: var(--sage);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .howto-steps strong {
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .howto-steps span {
+    color: var(--neutral);
+  }
+
+  footer.doc-footer {
+    margin-top: 80px;
+    padding-top: 24px;
+    border-top: 1px solid var(--hairline);
+    font-size: 0.85rem;
+    color: var(--neutral);
+  }
+
+  @media (max-width: 860px) {
+    .shell {
+      grid-template-columns: 1fr;
+    }
+    nav.toc {
+      position: relative;
+      height: auto;
+      padding: 32px 24px 0;
+    }
+    main {
+      border-left: none;
+      padding: 32px 24px 80px;
+    }
+    .feature {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .meta-row {
+      flex-wrap: wrap;
+    }
+  }
+</style>
+
+<div class="shell">
+  <nav class="toc">
+    <p class="toc-eyebrow">On this page</p>
+    <ul class="toc-list">
+      <li><a href="#discovery">Filter discovery</a></li>
+      <li><a href="#configuration">Filter configuration</a></li>
+      <li><a href="#storefront">Storefront experience</a></li>
+      <li><a href="#cart">Cart &amp; checkout</a></li>
+      <li><a href="#extras">Wishlist &amp; reviews</a></li>
+      <li><a href="#styling">Appearance</a></li>
+      <li><a href="#performance">Performance</a></li>
+      <li><a href="#plans">Plans &amp; trial</a></li>
+      <li><a href="#security">Security &amp; data</a></li>
+      <li><a href="#getting-started">Getting started</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <p class="kicker">Collection Filter App — Feature Guide</p>
+    <h1>Everything the app does today, organized the way you'll actually use it.</h1>
+    <p class="lede">This covers what merchants configure in the admin, and what shoppers see and do on the storefront. Anything still in progress is called out explicitly rather than listed as finished.</p>
+
+    <dl class="meta-row">
+      <div class="meta-item">
+        <dt>Admin surface</dt>
+        <dd>Dashboard, Filters, Customize, Reviews, Plans</dd>
+      </div>
+      <div class="meta-item">
+        <dt>Storefront surface</dt>
+        <dd>Collection filters block, Wishlist block</dd>
+      </div>
+      <div class="meta-item">
+        <dt>Applies to</dt>
+        <dd>Collections, all products, search</dd>
+      </div>
+      <div class="meta-item">
+        <dt>Tested themes</dt>
+        <dd>Dawn, Impulse, Horizon</dd>
+      </div>
+    </dl>
+
+    <section class="area" id="discovery">
+      <h2>Filter discovery</h2>
+      <p class="area-sub">The app looks at your actual catalog and offers every field that's realistically useful to filter by — nothing has to be set up by hand first.</p>
+
+      <div class="feature">
+        <div class="feature-name">Standard fields<span class="path">Filters page</span></div>
+        <div class="feature-body">
+          <p>Seven built-in filters are always available: price, availability, vendor, tag, product type, product category, and review rating.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Variant options<span class="path">auto-detected</span></div>
+        <div class="feature-body">
+          <p>The app scans your products for variant option names — size, color, and anything else you've set up — and offers each one as a filter automatically. A generic "Title" option (which Shopify adds to single-variant products) is excluded since it isn't meaningful to shoppers.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Metafields<span class="path">auto-detected</span></div>
+        <div class="feature-body">
+          <p>Any product metafield definition you've created in Shopify shows up as a filter option too, with color-swatch rendering when the metafield's value looks like a color name. Up to 5 metafield filters can be enabled at a time.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Order tag filters<span class="path">Filters page</span></div>
+        <div class="feature-body">
+          <p>Turn product tags that share a prefix (for example <code>fabric_work:</code>) into a filter of their own, with a custom label, a list or swatch display, and single or multiple selection. Up to 5 order tag filters can be added.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="area" id="configuration">
+      <h2>Filter configuration</h2>
+      <p class="area-sub">Everything below lives on the app's Filters page and applies instantly to the storefront once saved.</p>
+
+      <div class="feature">
+        <div class="feature-name">Enable &amp; order<span class="path">Filterable fields</span></div>
+        <div class="feature-body">
+          <p>Turn any discovered field on or off, and reorder the enabled ones with up/down controls — the storefront displays filters in exactly that order.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Layout<span class="path">Filter layout</span></div>
+        <div class="feature-body">
+          <p>Three layouts, chosen per shop:</p>
+          <ul>
+            <li><strong>Vertical</strong> — a sidebar beside the product grid, with collapsible sections.</li>
+            <li><strong>Horizontal</strong> — a row of dropdown pills above the grid.</li>
+            <li><strong>Drawer</strong> — a full-height slide-out panel opened by a button, with its own heading and close control.</li>
+          </ul>
+          <p>Mobile screens always use the Drawer style, regardless of which layout is selected for desktop.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Visibility<span class="path">Show on desktop / mobile</span></div>
+        <div class="feature-body">
+          <p>Independent switches to show or hide the entire filter widget per device — useful if you only want filtering on desktop, for example.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Products per page<span class="path">Pagination</span></div>
+        <div class="feature-body">
+          <p>Set once in the admin; the storefront then shows that many products at a time, with a "Load more" button and a "Showing X of Y products" counter underneath.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Clear-all label<span class="path">Clear all button</span></div>
+        <div class="feature-body">
+          <p>The text on the button that resets every active filter is fully editable — defaults to "Clear all" but can be renamed to match your store's voice.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Collection and search setups<span class="path">Filters page</span></div>
+        <div class="feature-body">
+          <p>Collection pages and search results each have their own filter list and layout settings, so you can offer different filters in each place.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Product counts<span class="path">Layout &amp; display</span></div>
+        <div class="feature-body">
+          <p>A switch controls whether each filter value shows how many products match it, for example "XL (3)".</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Live preview<span class="path">Filters page</span></div>
+        <div class="feature-body">
+          <p>A Preview button shows how the filters will look with your current layout and style settings before you save, and the Customizer can be opened as a pop-up straight from the Filters page.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="area" id="storefront">
+      <h2>Storefront experience</h2>
+      <p class="area-sub">What a shopper actually sees and does when they land on a collection, the all-products page, or search results.</p>
+
+      <div class="feature">
+        <div class="feature-name">Universal coverage</div>
+        <div class="feature-body">
+          <p>The same block works on individual collection pages, the <code>/collections/all</code> page, and search results — search queries the catalog directly and applies the same admin-configured filters.</p>
+          <p>On the search page, the theme's own default result grid is automatically hidden once the app's results take over, so shoppers don't see two product lists.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Live filtering</div>
+        <div class="feature-body">
+          <p>Checkbox filters, a two-thumb price range slider, and color swatches, each showing a live product count. Sections in Vertical and Drawer layouts collapse and expand independently.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Sort</div>
+        <div class="feature-body">
+          <p>Featured, best-selling, price (low–high / high–low), and title (A–Z / Z–A).</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Shareable filter state</div>
+        <div class="feature-body">
+          <p>Active filters and sort are written into the page URL, so a filtered view can be bookmarked, shared, or linked directly — and works with the browser's back and forward buttons.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Product cards</div>
+        <div class="feature-body">
+          <p>Each card shows a title (truncated to one line if long), price, a sale badge when the item is discounted, and a second product image that fades in on hover, if one exists.</p>
+          <p>Cards with variants show clickable size pills and color swatches — selecting one updates the card's price, image, and which variant "Add to cart" will add.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="area" id="cart">
+      <h2>Cart &amp; checkout</h2>
+      <p class="area-sub">Adding to cart happens without leaving the filtered grid.</p>
+
+      <div class="feature">
+        <div class="feature-name">Quick add to cart</div>
+        <div class="feature-body">
+          <p>Every card has an "Add to cart" button that adds the selected (or first available) variant directly, with an in-progress and confirmation state. Out-of-stock products show a disabled "Sold out" button instead.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Cart drawer &amp; count sync</div>
+        <div class="feature-body">
+          <p>After adding an item, the header's cart count updates immediately and the cart drawer's contents refresh to show the new item, with no full page reload. This includes the first item added to an empty cart.</p>
+          <div class="tag-row">
+            <span class="tag">count sync — live</span>
+            <span class="tag">drawer, existing items — live</span>
+            <span class="tag">drawer, first item added to empty cart — live</span>
+          </div>
+          <p>If a theme's cart drawer can't be recognised, the page reloads once after the first add so the drawer is never left showing stale contents.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="area" id="extras">
+      <h2>Wishlist &amp; reviews</h2>
+      <p class="area-sub">Extras that sit alongside the filters.</p>
+
+      <div class="feature">
+        <div class="feature-name">Wishlist<span class="path">Layout &amp; display</span></div>
+        <div class="feature-body">
+          <p>When switched on, every product card gets a heart icon so shoppers can save products. Customers who are logged in have their wishlist saved to their account; guests get a wishlist that stays in their browser.</p>
+          <p>A separate "Wishlist" app block shows a shopper's saved products as a grid, using the same cards as the filter results. Add it to a page in the theme editor.</p>
+          <p>Merchants can see what customers have saved on the app's <strong>Wishlists</strong> page: the total saved items, how many customers have a wishlist, the most-saved products, and a list of customers with a link to each customer in the Shopify admin.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Review ratings<span class="path">Reviews page</span></div>
+        <div class="feature-body">
+          <p>Star ratings are read from a product metafield, so they work with your existing review app. The defaults match Judge.me; on the Reviews page you can enter a different app's namespace and keys. The ratings appear on product cards and can also be used as a filter.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="area" id="styling">
+      <h2>Appearance</h2>
+      <p class="area-sub">A dedicated Customize page controls how the filter widget looks, separate from what it does — changes apply live, with no code edits.</p>
+
+      <div class="feature">
+        <div class="feature-name">Customize page<span class="path">app menu → Customize</span></div>
+        <div class="feature-body">
+          <ul>
+            <li>Sidebar background color</li>
+            <li>Filter value text — size, weight, transform, color</li>
+            <li>Filter heading text — size, weight, transform, color</li>
+            <li>Clear-all button — size, weight, radius, colors</li>
+            <li>Filters toggle button — size, weight, radius, colors</li>
+            <li>Add to cart button — size and colors, set separately for collection and search pages</li>
+            <li>Products per row in the grid</li>
+            <li>Color swatch shape — circle or square</li>
+            <li>Custom CSS, separate for collection and search pages</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="area" id="performance">
+      <h2>Performance</h2>
+      <p class="area-sub">How the app keeps the storefront fast.</p>
+
+      <div class="feature">
+        <div class="feature-name">Product cache<span class="path">Layout &amp; display → Product cache</span></div>
+        <div class="feature-body">
+          <p>Collection product data is saved for up to 10 minutes, so most shoppers see results without the app having to reload the whole collection from Shopify. The saved copy is also cleared automatically whenever a product changes.</p>
+          <p>Product changes (such as price, stock or new products) can take 5-10 minutes to show up in the filters. To see a change straight away, use <strong>Clear cache</strong>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="area" id="plans">
+      <h2>Plans &amp; trial</h2>
+      <p class="area-sub">What's free, what's paid, and what happens when the trial ends.</p>
+
+      <div class="feature">
+        <div class="feature-name">Free trial</div>
+        <div class="feature-body">
+          <p>Every live store gets a 7-day free trial that starts when the app is installed, with every feature available. The dashboard shows how many days are left.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Paid plan<span class="path">Plans page</span></div>
+        <div class="feature-body">
+          <p>After the trial, the app continues on a single Paid plan at $4.99 per month. There are no feature tiers: the Paid plan includes everything in this guide, so nothing is held back for a higher plan.</p>
+          <p>Nothing is charged automatically when the trial ends. The merchant approves the plan from the app's <strong>Plans</strong> page, which opens Shopify's own approval screen. Until they do, the storefront filters pause and the merchant's settings are kept, and the filters start working again as soon as the plan is approved.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Development stores</div>
+        <div class="feature-body">
+          <p>Shopify never bills development stores, so they get full access with no trial and no payment. If a development store later goes live, its 7-day trial starts at that point.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Current plan</div>
+        <div class="feature-body">
+          <p>The dashboard shows the store's current plan next to the welcome heading: Free trial, Paid, Development store (free), or Trial ended.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="area" id="security">
+      <h2>Security &amp; data</h2>
+      <p class="area-sub">How the app is built to keep store data safe.</p>
+
+      <div class="feature">
+        <div class="feature-name">Server-side only</div>
+        <div class="feature-body">
+          <p>All Shopify Admin API access happens on the app's own server. No API key, access token, or Storefront API credential is ever sent to a shopper's browser.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Scoped by shop</div>
+        <div class="feature-body">
+          <p>Every storefront request is checked against the requesting shop's own installation before any data is returned.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Uninstalling the app</div>
+        <div class="feature-body">
+          <p>When the app is uninstalled, its access to the store is removed straight away. The store's saved data (filter settings, style settings, wishlists and cached products) is kept for 48 hours, then deleted automatically when Shopify sends its store-data erasure request. If a merchant reinstalls within those 48 hours, their settings are still there.</p>
+        </div>
+      </div>
+
+      <div class="feature">
+        <div class="feature-name">Customer data requests<span class="path">Privacy compliance</span></div>
+        <div class="feature-body">
+          <p>The app handles Shopify's customer data request and customer erasure requests. The only customer-linked data it holds is wishlist items, and those are deleted on an erasure request.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="area" id="getting-started">
+      <p class="divider-label">Getting started</p>
+      <ol class="howto-steps">
+        <li>
+          <strong>Choose your filters</strong>
+          <span>Open the app's Filters page, turn on the fields you want, and drag their order to match how you'd like them to appear.</span>
+        </li>
+        <li>
+          <strong>Pick a layout</strong>
+          <span>Select Vertical, Horizontal, or Drawer — preview how each looks on your storefront before committing.</span>
+        </li>
+        <li>
+          <strong>Match your brand</strong>
+          <span>Visit the Customize page to set colors, fonts, and button styling so the widget feels native to your theme.</span>
+        </li>
+        <li>
+          <strong>Add the block</strong>
+          <span>In the theme editor, add the "Collection filters" app block to your collection, all-products, and search templates. The dashboard's Setup Guide has a button that opens the theme editor with the block ready to add.</span>
+        </li>
+      </ol>
+    </section>
+
+    <footer class="doc-footer">
+      Prepared for internal reference. Reflects the app's current build.
+    </footer>
+  </main>
+</div>

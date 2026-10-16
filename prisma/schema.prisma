@@ -1,0 +1,145 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Note that some adapters may set a maximum length for the String type by default, please ensure your strings are long
+// enough when changing adapters.
+// See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id            String    @id
+  shop          String
+  state         String
+  isOnline      Boolean   @default(false)
+  scope         String?
+  expires       DateTime?
+  accessToken   String
+  userId        BigInt?
+  firstName     String?
+  lastName      String?
+  email         String?
+  accountOwner  Boolean   @default(false)
+  locale        String?
+  collaborator  Boolean?  @default(false)
+  emailVerified Boolean?  @default(false)
+  refreshToken        String?
+  refreshTokenExpires DateTime?
+}
+
+model FilterConfig {
+  id          String   @id @default(cuid())
+  shop        String
+  context     String   @default("collection")
+  fieldKey    String
+  fieldType   String
+  label       String
+  displayType String   @default("list")
+  selectMode  String   @default("multiple")
+  valuePrefix String?
+  enabled     Boolean  @default(true)
+  position    Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([shop, context, fieldKey])
+  @@index([shop, context])
+}
+
+model FilterContextSettings {
+  id                 String   @id @default(cuid())
+  shop               String
+  context            String
+  pageSize           Int      @default(10)
+  filterLayout       String   @default("vertical")
+  showOnDesktop      Boolean  @default(true)
+  showOnMobile       Boolean  @default(true)
+  clearAllButtonText String   @default("Clear all")
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@unique([shop, context])
+  @@index([shop])
+}
+
+model ShopSettings {
+  shop                    String   @id
+  plan                    String   @default("free")
+  maxFilters              Int      @default(5)
+  pageSize                Int      @default(10)
+  filterLayout            String   @default("vertical")
+  buttonFontSize          Int      @default(14)
+  buttonFontWeight        Int      @default(700)
+  buttonBorderRadius      Int      @default(0)
+  buttonTextTransform     String   @default("none")
+  buttonTextColor         String   @default("#3A3A3A")
+  buttonBorderColor       String   @default("#BFBFBF")
+  buttonBackgroundColor   String   @default("#FFFFFF")
+  toggleFontSize          Int      @default(16)
+  toggleFontWeight        Int      @default(700)
+  toggleBorderRadius      Int      @default(6)
+  toggleTextTransform     String   @default("none")
+  toggleTextColor         String   @default("#1A1A1A")
+  toggleBorderColor       String   @default("#D1D1D1")
+  toggleBackgroundColor   String   @default("#FFFFFF")
+  valueFontSize           Int      @default(14)
+  valueFontWeight         Int      @default(400)
+  valueTextTransform      String   @default("none")
+  valueTextColor          String   @default("#3A3A3A")
+  headingFontSize         Int      @default(16)
+  headingFontWeight       Int      @default(600)
+  headingTextTransform    String   @default("none")
+  headingTextColor        String   @default("#1A1A1A")
+  sidebarBackgroundColor  String   @default("#F5F5F5")
+  productGridColumns      Int      @default(4)
+  swatchShape             String   @default("circle")
+  showOnDesktop           Boolean  @default(true)
+  showOnMobile            Boolean  @default(true)
+  clearAllButtonText      String   @default("Clear all")
+  addToCartCollectionBackgroundColor String @default("#1A1A1A")
+  addToCartCollectionTextColor       String @default("#FFFFFF")
+  addToCartCollectionFontSize        Int    @default(14)
+  addToCartSearchBackgroundColor     String @default("#1A1A1A")
+  addToCartSearchTextColor           String @default("#FFFFFF")
+  addToCartSearchFontSize            Int    @default(14)
+  customCssCollection     String   @default("") @db.Text
+  customCssSearch         String   @default("") @db.Text
+  reviewRatingNamespace   String   @default("reviews")
+  reviewRatingKey         String   @default("rating")
+  reviewCountKey          String   @default("rating_count")
+  showFilterCounts        Boolean  @default(true)
+  showWishlist            Boolean  @default(false)
+  installedAt             DateTime @default(now())
+}
+
+model WishlistItem {
+  id         String   @id @default(cuid())
+  shop       String
+  customerId String
+  productId  String
+  createdAt  DateTime @default(now())
+
+  @@unique([shop, customerId, productId])
+  @@index([shop, customerId])
+}
+
+// Server-side cache of a collection's mapped products, so storefront filter
+// requests don't re-fetch the whole collection from Shopify every time.
+// Rows expire after PRODUCT_CACHE_TTL_MS and are cleared on product updates
+// or from the "Clear cache" button.
+model ProductCache {
+  id        String   @id @default(cuid())
+  shop      String
+  cacheKey  String
+  data      Json
+  createdAt DateTime @default(now())
+
+  @@unique([shop, cacheKey])
+  @@index([shop])
+}

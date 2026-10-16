@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE `shopsettings` ADD COLUMN `buttonBackgroundColor` VARCHAR(191) NOT NULL DEFAULT '#FFFFFF',
+    ADD COLUMN `buttonBorderColor` VARCHAR(191) NOT NULL DEFAULT '#BFBFBF',
+    ADD COLUMN `buttonBorderRadius` INTEGER NOT NULL DEFAULT 0,
+    ADD COLUMN `buttonFontSize` INTEGER NOT NULL DEFAULT 14,
+    ADD COLUMN `buttonFontWeight` INTEGER NOT NULL DEFAULT 700,
+    ADD COLUMN `buttonTextColor` VARCHAR(191) NOT NULL DEFAULT '#3A3A3A',
+    ADD COLUMN `buttonTextTransform` VARCHAR(191) NOT NULL DEFAULT 'none';

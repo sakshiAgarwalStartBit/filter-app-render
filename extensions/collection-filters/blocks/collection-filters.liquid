@@ -1,0 +1,93 @@
+{% doc %}
+  Renders a collection filter + product grid. Product data is fetched from
+  the collection filter app's own backend (via the Admin API), gated by the
+  merchant's admin-selected filter fields. All requests go through the
+  app's Shopify App Proxy ("/apps/collection-filters"), which Shopify signs
+  and verifies server-side — no app URL is ever exposed to the storefront.
+  Heading is configured via block settings in the theme editor; products per
+  page, filter layout, and all visual styling are configured in the app's
+  admin (Filters and Style pages) and applied at runtime from the app's
+  config response.
+  @example
+  {% content_for 'block', type: 'collection-filters', id: 'collection-filters' %}
+{% enddoc %}
+
+{{ 'collection-filters.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'collection-filters.js' | asset_url }}" defer></script>
+
+<collection-filters-app
+  data-shop="{{ shop.permanent_domain }}"
+  data-collection-handle="{{ collection.handle | default: 'all' }}"
+  data-placeholder-image="{{ 'product-placeholder-image.jpg' | asset_url }}"
+  {% if template == 'search' %}
+    data-search-terms="{{ search.terms | escape }}"
+  {% endif %}
+  {% if customer %}
+    data-customer-id="{{ customer.id }}"
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.heading != blank %}
+    <h2 class="collection-filters-app__heading">{{ block.settings.heading }}</h2>
+  {% endif %}
+
+  <div class="collection-filters-app__layout" data-layout-root>
+    <button
+      type="button"
+      class="collection-filters-app__drawer-toggle"
+      data-drawer-toggle
+      hidden
+    >
+      {{ 'collection.filters.title' | t }}
+    </button>
+
+    <div class="collection-filters-app__drawer-overlay" data-drawer-overlay hidden></div>
+
+    <aside class="collection-filters-app__filters" data-filters-root aria-label="{{ 'collection.filters.title' | t }}">
+      <div class="collection-filters-app__drawer-header" data-drawer-header hidden>
+        <h2 class="collection-filters-app__drawer-heading">
+          {% if block.settings.heading != blank %}
+            {{ block.settings.heading }}
+          {% else %}
+            {{ 'collection.filters.title' | t }}
+          {% endif %}
+        </h2>
+        <button type="button" class="collection-filters-app__drawer-close" data-drawer-close>
+          &times;
+        </button>
+      </div>
+      <p class="collection-filters-app__loading" data-loading>{{ 'collection.filters.loading' | t }}</p>
+    </aside>
+
+    <div class="collection-filters-app__results">
+      <div class="collection-filters-app__product-search-row" data-product-search></div>
+      <div class="collection-filters-app__results-bar">
+        <p class="collection-filters-app__result-count" data-result-count></p>
+        <div class="collection-filters-app__results-bar-controls">
+          <div class="collection-filters-app__view-toggle" data-view-toggle></div>
+          <div class="collection-filters-app__sort" data-sort-control></div>
+        </div>
+      </div>
+      <div class="collection-filters-app__grid" data-product-grid></div>
+      <p class="collection-filters-app__empty" data-empty-state hidden>
+        {{ 'collection.filters.no_results' | t }}
+      </p>
+      <div class="collection-filters-app__pagination" data-pagination></div>
+    </div>
+  </div>
+</collection-filters-app>
+
+{% schema %}
+{
+  "name": "Collection filters",
+  "target": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Filter products"
+    }
+  ]
+}
+{% endschema %}

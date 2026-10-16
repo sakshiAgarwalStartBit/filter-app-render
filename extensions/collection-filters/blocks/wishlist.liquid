@@ -1,0 +1,61 @@
+{% doc %}
+  Renders a shopper's saved wishlist as a product grid, reusing the same
+  product-card rendering (image, price, variant picker, Add to cart, and a
+  remove-from-wishlist heart) as the Collection filters block. Product data
+  is fetched from the collection filter app's own backend by wishlisted
+  product IDs, scoped to the logged-in customer — logged-out visitors see a
+  prompt to log in instead of a wishlist.
+  @example
+  {% content_for 'block', type: 'wishlist', id: 'wishlist' %}
+{% enddoc %}
+
+{{ 'collection-filters.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'collection-filters.js' | asset_url }}" defer></script>
+
+<collection-filters-app
+  data-shop="{{ shop.permanent_domain }}"
+  data-placeholder-image="{{ 'product-placeholder-image.jpg' | asset_url }}"
+  data-wishlist-mode
+  {% if customer %}
+    data-customer-id="{{ customer.id }}"
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.heading != blank %}
+    <h2 class="collection-filters-app__heading">{{ block.settings.heading }}</h2>
+  {% endif %}
+
+  <div class="collection-filters-app__layout" data-layout-root>
+    <aside class="collection-filters-app__filters" data-filters-root hidden></aside>
+
+    <div class="collection-filters-app__results">
+      <div class="collection-filters-app__product-search-row" data-product-search hidden></div>
+      <div class="collection-filters-app__results-bar">
+        <p class="collection-filters-app__result-count" data-result-count></p>
+        <div class="collection-filters-app__results-bar-controls">
+          <div class="collection-filters-app__view-toggle" data-view-toggle></div>
+        </div>
+      </div>
+      <div class="collection-filters-app__grid" data-product-grid></div>
+      <p class="collection-filters-app__empty" data-empty-state hidden>
+        {{ 'collection.filters.wishlist_empty' | t }}
+      </p>
+      <div class="collection-filters-app__pagination" data-pagination></div>
+    </div>
+  </div>
+</collection-filters-app>
+
+{% schema %}
+{
+  "name": "Wishlist",
+  "target": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "My wishlist"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE `shopsettings` ADD COLUMN `toggleBackgroundColor` VARCHAR(191) NOT NULL DEFAULT '#FFFFFF',
+    ADD COLUMN `toggleBorderColor` VARCHAR(191) NOT NULL DEFAULT '#D1D1D1',
+    ADD COLUMN `toggleBorderRadius` INTEGER NOT NULL DEFAULT 6,
+    ADD COLUMN `toggleFontSize` INTEGER NOT NULL DEFAULT 16,
+    ADD COLUMN `toggleFontWeight` INTEGER NOT NULL DEFAULT 700,
+    ADD COLUMN `toggleTextColor` VARCHAR(191) NOT NULL DEFAULT '#1A1A1A',
+    ADD COLUMN `toggleTextTransform` VARCHAR(191) NOT NULL DEFAULT 'none';

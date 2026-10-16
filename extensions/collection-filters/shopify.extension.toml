@@ -1,0 +1,7 @@
+api_version = "2026-10"
+
+[[extensions]]
+name = "Collection filters"
+handle = "collection-filters"
+uid = "82f1416c-0e45-2379-b0bb-89967bc92dcdf9ecbd72"
+type = "theme"
