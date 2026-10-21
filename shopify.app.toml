@@ -1,6 +1,6 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "092889a9077c9654987f039b57f18cee"
+client_id = "001bf18426b6a2900ab7fbf1f7f77c8b"
 name = "SB Product Filter Render"
 application_url = "https://filter-app-render.onrender.com"
 embedded = true
